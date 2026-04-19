@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    AKASH GHOSH — Portfolio
-   custom.css  (v3 — dynamic GitHub graph)
+   custom.css  (v4 — indigo skills, stack hover)
 ═══════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
@@ -13,6 +13,8 @@
   --teal:    #00D4AA;
   --teal2:   #009E7F;
   --amber:   #FFB547;
+  --indigo:  #a78bfa;
+  --indigo2: #7c3aed;
   --text:    #E8F4F1;
   --text2:   #8BA3B8;
   --text3:   #4A6580;
@@ -23,7 +25,6 @@
   --radius:  6px;
   --shadow:  0 8px 32px rgba(0,0,0,.4);
 
-  /* Contribution levels */
   --cl0: #1E3A5F;
   --cl1: rgba(0,212,170,.20);
   --cl2: rgba(0,212,170,.45);
@@ -38,6 +39,8 @@
   --teal:    #007A63;
   --teal2:   #009E7F;
   --amber:   #C47A00;
+  --indigo:  #6d28d9;
+  --indigo2: #4c1d95;
   --text:    #0A1628;
   --text2:   #3A5270;
   --text3:   #7A95B0;
@@ -77,9 +80,7 @@ body {
   justify-content: center;
   pointer-events: none;
 }
-.morphic-nav {
-  pointer-events: all;
-}
+.morphic-nav { pointer-events: all; }
 .morphic-inner {
   display: flex;
   align-items: center;
@@ -109,19 +110,14 @@ body {
   white-space: nowrap;
   letter-spacing: .3px;
 }
-.morphic-item:hover {
-  color: var(--text);
-  background: rgba(255,255,255,.06);
-}
+.morphic-item:hover { color: var(--text); background: rgba(255,255,255,.06); }
 .morphic-item.active {
   background: var(--teal);
   color: #0A1628;
   font-weight: 600;
   padding: 8px 22px;
 }
-[data-theme="light"] .morphic-item.active {
-  color: #fff;
-}
+[data-theme="light"] .morphic-item.active { color: #fff; }
 
 /* ── TOP NAV ──────────────────────────────── */
 #topNav {
@@ -300,73 +296,138 @@ h1.hero-name .teal { color: var(--teal); }
 .info-val { font-size: 14px; color: var(--text); font-weight: 500; }
 
 /* ══════════════════════════════════════════
-   FLIP CARD — SKILLS
+   SKILLS — STACK HOVER CARDS
+   Replaces the old flip card system.
+   Two variants:
+     .sk-teal   — dark card with teal top border (Frontend, DB & Auth, Deployment)
+     .sk-indigo — deep indigo/purple gradient (Backend, AI & Tools, Languages)
 ══════════════════════════════════════════ */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
 }
-.skill-flip-wrap {
-  perspective: 1800px;
-  height: 210px;
+
+/* Wrapper — gives the card room to lift without clipping */
+.skill-stack-wrap {
+  /* min-height keeps all cards the same height regardless of pill count */
+  min-height: 200px;
 }
-.skill-flip-inner {
-  position: relative; width: 100%; height: 100%;
-  transform-style: preserve-3d;
-  transition: transform .65s cubic-bezier(.4,0,.2,1);
-}
-.skill-flip-wrap:hover .skill-flip-inner { transform: rotateY(180deg); }
-.skill-face {
-  position: absolute; inset: 0;
-  backface-visibility: hidden;
+
+/* Base card */
+.skill-stack-card {
+  height: 100%;
+  min-height: 200px;
   border-radius: 10px;
+  padding: 22px 20px 24px;
   border: 1px solid var(--border);
-  padding: 22px;
+  position: relative;
+  /* Stack depth — two offset shadow layers give the "pile of paper" look */
+  box-shadow:
+    4px 4px 0 rgba(0,0,0,.35),
+    8px 8px 0 rgba(0,0,0,.22);
+  /* Smooth lift on hover */
+  transition:
+    transform .38s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow .38s ease,
+    border-color .25s ease;
+  cursor: default;
 }
-.skill-front {
+
+.skill-stack-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow:
+    0 20px 44px rgba(0,0,0,.45),
+    4px 4px 0 rgba(0,0,0,.25);
+}
+
+/* ── Teal variant (Frontend, Database & Auth, Deployment) ── */
+.sk-teal {
   background: var(--card);
-  border-top: 2px solid var(--teal);
+  border-top: 2.5px solid var(--teal);
 }
-.skill-front.amber-top { border-top-color: var(--amber); }
-.skill-back {
-  background: linear-gradient(145deg, #0e1d36, #152848);
-  transform: rotateY(180deg);
-  display: flex; flex-direction: column; gap: 6px;
-  border-top: 2px solid var(--teal);
-}
-[data-theme="light"] .skill-back {
-  background: linear-gradient(145deg, #deeaf7, #f0f6ff);
-}
-.skill-cat {
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--teal); font-weight: 600; margin-bottom: 14px;
+.sk-teal:hover { border-color: var(--teal); }
+
+.sk-cat-teal {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 14px;
   font-family: 'Space Mono', monospace;
 }
-.amber-cat { color: var(--amber) !important; }
+
+.sk-teal .skill-tag {
+  background: var(--bg2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+.sk-teal .skill-tag:hover {
+  background: var(--bg3);
+  color: var(--text);
+  border-color: var(--teal);
+}
+
+/* ── Indigo variant (Backend, AI & Tools, Languages) ── */
+/* CHANGED: was orange/amber gradient → now deep indigo/purple */
+.sk-indigo {
+  background: linear-gradient(145deg, #2d1b69 0%, #1a1040 55%, #0f0a2e 100%);
+  border-top: 2.5px solid #a78bfa;
+  border-color: #4a2fa0;
+}
+.sk-indigo:hover { border-color: #a78bfa; }
+
+[data-theme="light"] .sk-indigo {
+  background: linear-gradient(145deg, #ede9fe 0%, #f5f3ff 100%);
+  border-top: 2.5px solid #7c3aed;
+  border-color: #c4b5fd;
+}
+
+.sk-cat-indigo {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c4b5fd;
+  font-weight: 600;
+  margin-bottom: 14px;
+  font-family: 'Space Mono', monospace;
+}
+[data-theme="light"] .sk-cat-indigo { color: #6d28d9; }
+
+.sk-indigo .skill-tag {
+  background: rgba(10, 6, 30, 0.65);
+  color: #d4c8ff;
+  border: 1px solid #5a3fba;
+}
+[data-theme="light"] .sk-indigo .skill-tag {
+  background: rgba(109, 40, 217, 0.08);
+  color: #5b21b6;
+  border: 1px solid #c4b5fd;
+}
+.sk-indigo .skill-tag:hover {
+  background: rgba(20, 10, 50, 0.85);
+  border-color: #a78bfa;
+  color: #ede9fe;
+}
+[data-theme="light"] .sk-indigo .skill-tag:hover {
+  background: rgba(109, 40, 217, 0.15);
+  border-color: #7c3aed;
+  color: #4c1d95;
+}
+
+/* Shared pill styles */
 .skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .skill-tag {
-  padding: 4px 11px; border-radius: 3px;
-  font-size: 12px; font-weight: 500;
-  background: var(--bg2); color: var(--text2);
-  border: 1px solid var(--border);
-  transition: background .2s, color .2s;
+  padding: 4px 11px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background .2s, color .2s, border-color .2s;
 }
-.skill-flip-wrap:hover .skill-tag { background: var(--bg3); color: var(--text); }
-.back-cat {
-  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--teal); font-family: 'Space Mono', monospace; margin-bottom: 8px;
-}
-.tag-list { display: flex; flex-direction: column; gap: 6px; }
-.tag-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
-.tag-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--teal); flex-shrink: 0;
-}
-.amber-dot { background: var(--amber); }
 
 /* ══════════════════════════════════════════
-   FLIP CARD — PROJECTS
+   FLIP CARD — PROJECTS (unchanged)
 ══════════════════════════════════════════ */
 .projects-grid {
   display: grid;
@@ -397,9 +458,7 @@ h1.hero-name .teal { color: var(--teal); }
   padding: 22px;
   display: flex; flex-direction: column;
 }
-[data-theme="light"] .flip-back {
-  background: linear-gradient(145deg, #deeaf7, #f0f6ff);
-}
+[data-theme="light"] .flip-back { background: linear-gradient(145deg, #deeaf7, #f0f6ff); }
 .proj-front-top { height: 4px; }
 .teal-top { background: linear-gradient(90deg, var(--teal), var(--teal2)); }
 .amber-top { background: linear-gradient(90deg, var(--amber), #e69a00); }
@@ -409,14 +468,8 @@ h1.hero-name .teal { color: var(--teal); }
   font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
   margin-bottom: 12px;
 }
-.teal-badge {
-  background: rgba(0,212,170,.1); color: var(--teal);
-  border: 1px solid rgba(0,212,170,.2);
-}
-.amber-badge {
-  background: rgba(255,181,71,.1); color: var(--amber);
-  border: 1px solid rgba(255,181,71,.2);
-}
+.teal-badge { background: rgba(0,212,170,.1); color: var(--teal); border: 1px solid rgba(0,212,170,.2); }
+.amber-badge { background: rgba(255,181,71,.1); color: var(--amber); border: 1px solid rgba(255,181,71,.2); }
 .proj-title {
   font-family: 'Space Mono', monospace; font-size: 17px;
   font-weight: 700; margin-bottom: 8px; line-height: 1.3;
@@ -647,18 +700,13 @@ h1.hero-name .teal { color: var(--teal); }
 /* ══════════════════════════════════════════
    GITHUB CONTRIBUTION GRAPH — DYNAMIC
 ══════════════════════════════════════════ */
-/* ══ GITHUB CONTRIBUTION GRAPH — DYNAMIC ════════════════
-   Matches GitHub's exact dark theme visual style
-══════════════════════════════════════════════════════ */
-
-/* GitHub-exact color palette (dark mode) */
 :root {
-  --gh-c0: #161b22;   /* empty cell */
-  --gh-c1: #0e4429;   /* level 1 */
-  --gh-c2: #006d32;   /* level 2 */
-  --gh-c3: #26a641;   /* level 3 */
-  --gh-c4: #39d353;   /* level 4 */
-  --gh-cx: transparent; /* future / out-of-range */
+  --gh-c0: #161b22;
+  --gh-c1: #0e4429;
+  --gh-c2: #006d32;
+  --gh-c3: #26a641;
+  --gh-c4: #39d353;
+  --gh-cx: transparent;
 }
 [data-theme="light"] {
   --gh-c0: #ebedf0;
@@ -668,81 +716,46 @@ h1.hero-name .teal { color: var(--teal); }
   --gh-c4: #216e39;
 }
 
-/* Wrapper card */
 .gh-contrib-wrapper {
   margin-top: 28px;
-  background: #0d1117;  /* GitHub's exact dark bg */
+  background: #0d1117;
   border: 1px solid #30363d;
   border-radius: 10px;
   padding: 20px 24px 16px;
   transition: border-color .25s;
 }
-[data-theme="light"] .gh-contrib-wrapper {
-  background: #ffffff;
-  border-color: #d0d7de;
-}
+[data-theme="light"] .gh-contrib-wrapper { background: #ffffff; border-color: #d0d7de; }
 .gh-contrib-wrapper:hover { border-color: #39d353; }
 [data-theme="light"] .gh-contrib-wrapper:hover { border-color: #216e39; }
 
-/* Header row */
 .gh-contrib-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
 }
-.gh-contrib-card-left {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  flex-wrap: wrap;
-}
+.gh-contrib-card-left { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
 .gh-contrib-total-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 16px;
-  font-weight: 700;
-  color: #e6edf3;
+  font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: #e6edf3;
 }
 [data-theme="light"] .gh-contrib-total-num { color: #1f2328; }
-.gh-contrib-total-label {
-  font-size: 13px;
-  color: #848d97;
-}
+.gh-contrib-total-label { font-size: 13px; color: #848d97; }
 [data-theme="light"] .gh-contrib-total-label { color: #57606a; }
 .gh-contrib-profile-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-family: 'Space Mono', monospace;
-  color: #58a6ff;
-  text-decoration: none;
-  padding: 4px 10px;
-  border: 1px solid #30363d;
-  border-radius: 6px;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-family: 'Space Mono', monospace;
+  color: #58a6ff; text-decoration: none;
+  padding: 4px 10px; border: 1px solid #30363d; border-radius: 6px;
   transition: background .2s;
 }
 [data-theme="light"] .gh-contrib-profile-link { color: #0969da; border-color: #d0d7de; }
 .gh-contrib-profile-link:hover { background: rgba(88,166,255,.1); }
 [data-theme="light"] .gh-contrib-profile-link:hover { background: rgba(9,105,218,.08); }
 
-/* ── Skeleton loading ── */
-.gh-contrib-skeleton-wrap {
-  overflow: hidden;
-}
+.gh-contrib-skeleton-wrap { overflow: hidden; }
 .gh-skel-month-row {
-  display: flex;
-  gap: 0;
-  margin-bottom: 6px;
-  padding-left: 34px;
+  display: flex; gap: 0; margin-bottom: 6px; padding-left: 34px;
 }
 .gh-skel-month-row span {
-  flex: 1;
-  font-size: 11px;
-  color: #848d97;
-  font-family: 'Space Mono', monospace;
+  flex: 1; font-size: 11px; color: #848d97; font-family: 'Space Mono', monospace;
 }
 [data-theme="light"] .gh-skel-month-row span { color: #57606a; }
 .gh-skel-grid {
@@ -750,13 +763,10 @@ h1.hero-name .teal { color: var(--teal); }
   grid-template-columns: repeat(53, 12px);
   grid-template-rows: repeat(7, 12px);
   grid-auto-flow: column;
-  gap: 3px;
-  padding-left: 34px;
+  gap: 3px; padding-left: 34px;
 }
 .gh-skel-cell {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+  width: 12px; height: 12px; border-radius: 2px;
   background: var(--gh-c0);
   animation: ghSkelPulse 1.5s ease-in-out infinite;
 }
@@ -765,77 +775,33 @@ h1.hero-name .teal { color: var(--teal); }
   50% { opacity: .7; }
 }
 
-/* ── Real graph layout ── */
-.gh-contrib-real {
-  overflow: hidden;
-}
+.gh-contrib-real { overflow: hidden; }
 .gh-contrib-scroll-area {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
 }
-/* Day labels column */
 .gh-contrib-day-col {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex-shrink: 0;
-  padding-top: 20px; /* align with graph rows below month labels */
+  display: flex; flex-direction: column; gap: 3px;
+  flex-shrink: 0; padding-top: 20px;
 }
 .gh-contrib-day-col span {
-  height: 12px;
-  font-size: 10px;
-  line-height: 12px;
-  color: #848d97;
-  font-family: 'Space Mono', monospace;
-  white-space: nowrap;
-  text-align: right;
-  padding-right: 4px;
-  min-width: 28px;
+  height: 12px; font-size: 10px; line-height: 12px;
+  color: #848d97; font-family: 'Space Mono', monospace;
+  white-space: nowrap; text-align: right; padding-right: 4px; min-width: 28px;
 }
 [data-theme="light"] .gh-contrib-day-col span { color: #57606a; }
-
-/* Graph area (month row + weeks grid) */
-.gh-contrib-graph-area {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Month labels row */
-.gh-contrib-month-row {
-  display: flex;
-  gap: 3px;
-}
+.gh-contrib-graph-area { display: flex; flex-direction: column; gap: 6px; }
+.gh-contrib-month-row { display: flex; gap: 3px; }
 .gh-month-label-cell {
-  width: 12px;
-  font-size: 10px;
-  color: #848d97;
-  font-family: 'Space Mono', monospace;
-  white-space: nowrap;
-  overflow: visible;
+  width: 12px; font-size: 10px; color: #848d97;
+  font-family: 'Space Mono', monospace; white-space: nowrap; overflow: visible;
 }
 [data-theme="light"] .gh-month-label-cell { color: #57606a; }
+.gh-contrib-weeks-row { display: flex; gap: 3px; }
+.gh-week-col { display: flex; flex-direction: column; gap: 3px; }
 
-/* Weeks row */
-.gh-contrib-weeks-row {
-  display: flex;
-  gap: 3px;
-}
-.gh-week-col {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-/* Individual cells — GitHub exact colors */
 .gh-cell {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: outline .08s;
+  width: 12px; height: 12px; border-radius: 2px;
+  cursor: pointer; transition: outline .08s;
 }
 .gh-cell:hover { outline: 1px solid rgba(255,255,255,.4); outline-offset: 1px; }
 .gh-c0  { background: var(--gh-c0); }
@@ -846,73 +812,34 @@ h1.hero-name .teal { color: var(--teal); }
 .gh-cx  { background: transparent; cursor: default; }
 .gh-cx:hover { outline: none; }
 
-/* Footer: legend + source note */
 .gh-contrib-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; flex-wrap: wrap; gap: 8px;
 }
-.gh-contrib-source-note {
-  font-size: 11px;
-  color: #848d97;
-  font-family: 'Space Mono', monospace;
-}
+.gh-contrib-source-note { font-size: 11px; color: #848d97; font-family: 'Space Mono', monospace; }
 [data-theme="light"] .gh-contrib-source-note { color: #57606a; }
-.gh-legend-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.gh-legend-txt {
-  font-size: 11px;
-  color: #848d97;
-}
+.gh-legend-row { display: flex; align-items: center; gap: 4px; }
+.gh-legend-txt { font-size: 11px; color: #848d97; }
 [data-theme="light"] .gh-legend-txt { color: #57606a; }
-.gh-legend-cell {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-}
+.gh-legend-cell { width: 12px; height: 12px; border-radius: 2px; }
 
-/* Error state */
 .gh-contrib-error-msg {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 18px;
-  border-radius: 8px;
-  background: rgba(255,107,107,.06);
-  border: 1px solid rgba(255,107,107,.2);
-  font-size: 13px;
-  color: #848d97;
-  margin-top: 8px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 18px; border-radius: 8px;
+  background: rgba(255,107,107,.06); border: 1px solid rgba(255,107,107,.2);
+  font-size: 13px; color: #848d97; margin-top: 8px;
 }
 .gh-contrib-error-msg a { color: var(--teal); text-decoration: none; }
 .gh-contrib-error-msg a:hover { text-decoration: underline; }
 
-/* Tooltip */
 .gh-contrib-tooltip {
-  position: fixed;
-  z-index: 9999;
-  background: #1c2128;
-  border: 1px solid #444c56;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 12px;
-  color: #e6edf3;
-  pointer-events: none;
-  box-shadow: 0 8px 24px rgba(0,0,0,.5);
-  white-space: nowrap;
-  line-height: 1.6;
+  position: fixed; z-index: 9999;
+  background: #1c2128; border: 1px solid #444c56; border-radius: 6px;
+  padding: 8px 12px; font-size: 12px; color: #e6edf3;
+  pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  white-space: nowrap; line-height: 1.6;
 }
-[data-theme="light"] .gh-contrib-tooltip {
-  background: #f6f8fa;
-  border-color: #d0d7de;
-  color: #1f2328;
-}
+[data-theme="light"] .gh-contrib-tooltip { background: #f6f8fa; border-color: #d0d7de; color: #1f2328; }
 .gh-contrib-tooltip strong { font-weight: 600; }
 .gh-contrib-tooltip span { color: #848d97; display: block; font-size: 11px; }
 
@@ -973,7 +900,6 @@ footer span { color: var(--teal); }
   .hero-stats { gap: 32px; }
   .hr-stats-header { flex-wrap: wrap; }
   .hr-profile-btn { margin-left: 0; }
-  .gh-contrib-header { flex-direction: column; }
 }
 @media (max-width: 680px) {
   .nav-links { display: none; }
@@ -984,11 +910,11 @@ footer span { color: var(--teal); }
   .connect-grid { grid-template-columns: 1fr; }
   .morphic-item { padding: 7px 11px; font-size: 12px; }
   .morphic-item.active { padding: 7px 15px; }
-  .gh-contrib-section { padding: 16px; }
-  .gh-contrib-title-row { flex-wrap: wrap; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 440px) {
   .morphic-inner { gap: 0; }
   .morphic-item { padding: 7px 9px; font-size: 11px; letter-spacing: 0; }
   .morphic-item.active { padding: 7px 12px; }
+  .skills-grid { grid-template-columns: 1fr; }
 }
