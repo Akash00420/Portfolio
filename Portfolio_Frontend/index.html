@@ -744,7 +744,10 @@ document.addEventListener('mousemove', function(e) {
   }
 });
 
-/* ── Contact Form — Nodemailer Backend ── */
+/* ══════════════════════════════════════════
+   CONTACT FORM — with AbortController timeout
+   (handles Render free-tier cold starts)
+══════════════════════════════════════════ */
 async function sendEmail() {
   const name    = document.getElementById('contact-name').value.trim();
   const email   = document.getElementById('contact-email').value.trim();
@@ -761,13 +764,20 @@ async function sendEmail() {
 
   sendBtn.textContent = 'Sending…';
   sendBtn.disabled    = true;
+  status.style.display = 'none';
 
   try {
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 20000); // 20s timeout
+
     const res = await fetch('https://portfolio-backend-zf7v.onrender.com/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, message }),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
+
     const data = await res.json();
 
     if (res.ok) {
@@ -783,7 +793,9 @@ async function sendEmail() {
   } catch (err) {
     status.style.display = 'block';
     status.style.color   = '#ff6b6b';
-    status.textContent   = '✗ Failed. Please email me at ghosakash94@gmail.com';
+    status.textContent   = err.name === 'AbortError'
+      ? '✗ Server is warming up — please try again in 30 seconds.'
+      : '✗ Failed. Please email me at ghosakash94@gmail.com';
   } finally {
     sendBtn.textContent = 'Send Message →';
     sendBtn.disabled    = false;
