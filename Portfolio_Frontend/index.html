@@ -796,4 +796,13 @@ async function sendEmail() {
   } catch (err) {
     status.style.color   = '#ff6b6b';
     status.textContent   = err.name === 'AbortError'
- 
+      ? '✗ Server took too long to wake — please try again in 30 seconds.'
+      : '✗ Failed. Please email me at ghosakash94@gmail.com';
+  } finally {
+    sendBtn.textContent = 'Send Message →';
+    sendBtn.disabled    = false;
+  }
+}
+</script>
+</body>
+</html>
